@@ -72,11 +72,48 @@ function nextBusToSahyadri(rowsData, compareTimeValue) {
     }
 }
 
+function rowDataSelector(rowsData, currDateTime) {
+    const instiHolidays = ['Jan 15', 'Jan 26', 'Mar 25', 'Mar 29', 'Apr 11', 'Apr 21']
+    const MonFri = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
+    const currDate = currDateTime.split(', ')[1]
+    let dayIndex
+
+    // if date is a institute holiday go to saturday timetable
+    if (instiHolidays.includes(currDate) && currDateTime.split(', ')[0] !== 'Sun') {
+        dayIndex = "Sat"
+    } else {
+        dayIndex = currDateTime.split(', ')[0]
+    }
+    
+    if (MonFri.includes(dayIndex)) {
+        dayIndex = "Mon-Fri"
+    }
+
+    let startIndex = -1
+    let endIndex
+    for (row in rowsData) {
+        if (rowsData[row][4] === dayIndex) {
+            if (startIndex === -1) {
+                startIndex = parseInt(row)
+                endIndex = parseInt(row) + 1
+            } else {
+                endIndex = parseInt(row) + 1
+            }
+        }
+    }
+    return rowsData.slice(startIndex, endIndex)
+}
+
 // takes timestring ('8:00 am') and returns [8,0], if time is in PM adds 12 to hour value
 function strToTime(strng) {
     const preString = strng.split(' ')
     let newStr
-    if (preString[1].toUpperCase() === 'AM') {
+    //console.log(preString[1])
+    if (preString[1].toUpperCase() === 'AM' && Number(preString[0].split(':')[0]) === 12) {
+        newStr = [Number(0), Number(preString[0].split(':')[1])]
+    } else if (preString[1].toUpperCase() === 'AM') {
+        newStr = [Number(preString[0].split(':')[0]), Number(preString[0].split(':')[1])]
+    } else if (preString[1].toUpperCase() === 'PM' && Number(preString[0].split(':')[0]) === 12) {
         newStr = [Number(preString[0].split(':')[0]), Number(preString[0].split(':')[1])]
     } else if (preString[1].toUpperCase() === 'PM') {
         newStr = [Number(preString[0].split(':')[0]) + 12, Number(preString[0].split(':')[1])]
