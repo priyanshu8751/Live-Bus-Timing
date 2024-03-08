@@ -1,3 +1,4 @@
+// my edited code
 const express = require('express');
 const {google} = require('googleapis');
 
@@ -5,6 +6,7 @@ const app = express();
 
 app.get('/', async(req, res) => {
     // getting current time. return value is of the format "weekday, month date, hh:mm AM/PM". eg: "Sat, Feb 17, 01:08 AM"
+    
     const currentTimeFull = new Date().toLocaleString('en-US', {
         weekday: 'short',
         hour : '2-digit',
@@ -12,7 +14,9 @@ app.get('/', async(req, res) => {
         day : '2-digit',
         month: 'short'
     })
+    
 
+    //const currentTimeFull = 'Sat, Mar 09, 08:25 AM'
     // logs current time
     console.log(`Time is ${currentTimeFull}`)
 
@@ -44,30 +48,18 @@ app.get('/', async(req, res) => {
     const currentTime = currentTimeFull.split(', ')[2]
     
     res.send('hello')
-    console.log(`The next bus to Nila: ${nextBusToNila(rowData, currentTime)} \nThe next bus to Sahyadri: ${nextBusToSahyadri(rowData, currentTime)}`)
+    console.log(`The next bus to Nila: ${nextBus(rowData, currentTime, 'nila')} \nThe next bus to Sahyadri: ${nextBus(rowData, currentTime, 'sahyadri')}`)
 })
 
-app.listen(5000)
+//app.listen(5000)
 
 // takes row-wise data and current time as arguments and returns the next bus to nila timing
 // checks first if end point is nila, then checks if that row's time value is greater than current time
-function nextBusToNila(rowsDataNila, compareTimeValue) {
-    for (val in rowsDataNila) {
-        if (rowsDataNila[val][2].toLowerCase() === 'nila') {
-            if (compareTime(strToTime(rowsDataNila[val][0]), strToTime(compareTimeValue))) {
-                return rowsDataNila[val][0]
-            }
-        }   
-    }
-}
-
-// takes row-wise data and current time as arguments and returns the next bus to sahyadri timing. Can i combine this and nila func into one? will it make any difference?  
-function nextBusToSahyadri(rowsData, compareTimeValue) {
+function nextBus(rowsData, compareTimeValue, endpoint) {
+    const currTime = strToTime(compareTimeValue)
     for (val in rowsData) {
-        if (rowsData[val][2].toLowerCase() === 'sahyadri') {
-            if (compareTime(strToTime(rowsData[val][0]), strToTime(compareTimeValue))) {
+        if (rowsData[val][2].toLowerCase() === endpoint && compareTime(strToTime(rowsData[val][0]), currTime)) {
                 return rowsData[val][0]
-            }
         }   
     }
 }
@@ -76,13 +68,11 @@ function rowDataSelector(rowsData, currDateTime) {
     const instiHolidays = ['Jan 15', 'Jan 26', 'Mar 25', 'Mar 29', 'Apr 11', 'Apr 21']
     const MonFri = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
     const currDate = currDateTime.split(', ')[1]
-    let dayIndex
+    let dayIndex = currDateTime.split(', ')[0]
 
     // if date is a institute holiday go to saturday timetable
     if (instiHolidays.includes(currDate) && currDateTime.split(', ')[0] !== 'Sun') {
         dayIndex = "Sat"
-    } else {
-        dayIndex = currDateTime.split(', ')[0]
     }
     
     if (MonFri.includes(dayIndex)) {
@@ -90,16 +80,17 @@ function rowDataSelector(rowsData, currDateTime) {
     }
 
     let startIndex = -1
-    let endIndex
-    for (row in rowsData) {
+    let endIndex = 0
+    for (let row = 0; row < rowsData.length; row++) {
         if (rowsData[row][4] === dayIndex) {
             if (startIndex === -1) {
-                startIndex = parseInt(row)
-                endIndex = parseInt(row) + 1
-            } else {
-                endIndex = parseInt(row) + 1
-            }
+                startIndex = row
+            } 
+            endIndex = row + 1
         }
+        else if (endIndex) {
+            break
+        } 
     }
     return rowsData.slice(startIndex, endIndex)
 }
@@ -107,15 +98,12 @@ function rowDataSelector(rowsData, currDateTime) {
 // takes timestring ('8:00 am') and returns [8,0], if time is in PM adds 12 to hour value
 function strToTime(strng) {
     const preString = strng.split(' ')
-    let newStr
+    let newStr = [Number(preString[0].split(':')[0]), Number(preString[0].split(':')[1])]
     //console.log(preString[1])
     if (preString[1].toUpperCase() === 'AM' && Number(preString[0].split(':')[0]) === 12) {
-        newStr = [Number(0), Number(preString[0].split(':')[1])]
-    } else if (preString[1].toUpperCase() === 'AM') {
-        newStr = [Number(preString[0].split(':')[0]), Number(preString[0].split(':')[1])]
-    } else if (preString[1].toUpperCase() === 'PM' && Number(preString[0].split(':')[0]) === 12) {
-        newStr = [Number(preString[0].split(':')[0]), Number(preString[0].split(':')[1])]
-    } else if (preString[1].toUpperCase() === 'PM') {
+        newStr = [0, Number(preString[0].split(':')[1])]
+    } 
+    else if (preString[1].toUpperCase() === 'PM' && Number(preString[0].split(':')[0]) !== 12) {
         newStr = [Number(preString[0].split(':')[0]) + 12, Number(preString[0].split(':')[1])]
     }
     return newStr
@@ -131,3 +119,7 @@ function compareTime(time1, time2) {
         } else {return 0}
     } else {return 0}
 }
+
+ app.listen(8000,()=>{
+     console.log(`server is on air ${currentTime}`);
+ })
