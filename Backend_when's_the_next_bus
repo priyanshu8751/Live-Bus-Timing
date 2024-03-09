@@ -48,13 +48,14 @@ app.get('/', async(req, res) => {
     const currentTime = currentTimeFull.split(', ')[2]
     
     res.send('hello')
-    console.log(`The next bus to Nila: ${nextBus(rowData, currentTime, 'nila')} \nThe next bus to Sahyadri: ${nextBus(rowData, currentTime, 'sahyadri')}`)
+    console.log(`The next bus to Nila: ${nextBus(rowDataSelector(rowData, currentTimeFull), currentTime, 'nila')} \nThe next bus to Sahyadri: ${nextBus(rowDataSelector(rowData, currentTimeFull), currentTime, 'sahyadri')}`)
 })
 
-//app.listen(5000)
+app.listen(5000)
 
 // takes row-wise data and current time as arguments and returns the next bus to nila timing
 // checks first if end point is nila, then checks if that row's time value is greater than current time
+
 function nextBus(rowsData, compareTimeValue, endpoint) {
     const currTime = strToTime(compareTimeValue)
     for (val in rowsData) {
@@ -120,6 +121,3 @@ function compareTime(time1, time2) {
     } else {return 0}
 }
 
- app.listen(8000,()=>{
-     console.log(`server is on air ${currentTime}`);
- })
