@@ -1,12 +1,15 @@
-// my edited code
 const express = require('express');
 const {google} = require('googleapis');
+
+const dayjs = require('dayjs')
+var customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat)
 
 const app = express();
 
 app.get('/', async(req, res) => {
+
     // getting current time. return value is of the format "weekday, month date, hh:mm AM/PM". eg: "Sat, Feb 17, 01:08 AM"
-    
     const currentTimeFull = new Date().toLocaleString('en-US', {
         weekday: 'short',
         hour : '2-digit',
@@ -57,9 +60,9 @@ app.listen(5000)
 // checks first if end point is nila, then checks if that row's time value is greater than current time
 
 function nextBus(rowsData, compareTimeValue, endpoint) {
-    const currTime = strToTime(compareTimeValue)
+    const currTime = dayjs(compareTimeValue)
     for (val in rowsData) {
-        if (rowsData[val][2].toLowerCase() === endpoint && compareTime(strToTime(rowsData[val][0]), currTime)) {
+        if (rowsData[val][2].toLowerCase() === endpoint && dayjs(compareTimeValue, 'hh:mm A').isBefore(dayjs(rowsData[val][0], 'hh:mm A'))) {
                 return rowsData[val][0]
         }   
     }
@@ -95,29 +98,3 @@ function rowDataSelector(rowsData, currDateTime) {
     }
     return rowsData.slice(startIndex, endIndex)
 }
-
-// takes timestring ('8:00 am') and returns [8,0], if time is in PM adds 12 to hour value
-function strToTime(strng) {
-    const preString = strng.split(' ')
-    let newStr = [Number(preString[0].split(':')[0]), Number(preString[0].split(':')[1])]
-    //console.log(preString[1])
-    if (preString[1].toUpperCase() === 'AM' && Number(preString[0].split(':')[0]) === 12) {
-        newStr = [0, Number(preString[0].split(':')[1])]
-    } 
-    else if (preString[1].toUpperCase() === 'PM' && Number(preString[0].split(':')[0]) !== 12) {
-        newStr = [Number(preString[0].split(':')[0]) + 12, Number(preString[0].split(':')[1])]
-    }
-    return newStr
-}
-
-// returns 1 if time1 > time2, need to handle next day error
-function compareTime(time1, time2) {
-    if (time1[0] > time2[0]) {
-        return 1
-    } else if (time1[0] === time2[0]) {
-        if (time1[1] >= time2[1]) {
-            return 1
-        } else {return 0}
-    } else {return 0}
-}
-
