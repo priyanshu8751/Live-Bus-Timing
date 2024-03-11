@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>When is the next Bus</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <!--  NavBar Section  -->
+    <nav class="navBar">
+        <div class="logo">
+            <img src="logo_2.png" alt="logo">
+        </div>
+        
+        <form action = "/getTime"  method = "post">
+            <div class="navMenu">
+                <input type ="submit" value = "Bus Schedule" class="scheduleBtn" >
+            </div>
+        </form>
+    </nav>
+
+     <!-- Strip section  -->
+     <div class="strip">
+        <p class="nextBusInfo" id="nextBusInfo">
+            Next Bus ----> &nbsp; Sahyadri to Nila: <%= curr ? curr : 'No bus' %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Nila to Sahyadri: <%= curr2 ? curr2 : 'No bus' %>
+        </p>
+    </div>
+    
+</body>
+</html>
+

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>full schedule</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+  <!--  NavBar Section  -->
+    <nav class="navBar">
+        <div class="logo">
+            <img src="logo_2.png" alt="logo">
+        </div>
+        
+        <form action = "/getTime"  method = "post">
+            <div class="navMenu">
+                <input type ="submit" value = "Bus Schedule" class="scheduleBtn" >
+            </div>
+        </form>
+    </nav>
+    
+    <!-- Strip section  -->
+    <div class="strip">
+      <p class="nextBusInfo" id="nextBusInfo">
+          Next Bus ----> &nbsp; Sahyadri to Nila: <%= curr ? curr : 'No bus' %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Nila to Sahyadri: <%= curr2 ? curr2 : 'No bus' %>
+      </p>
+  </div>
+
+    <!-- Table section -->
+    <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Starting station</th>
+            <th>Ending station</th>
+            <th>No. of Bus</th>
+            <th>Day</th>
+          </tr>
+        </thead>
+        <tbody id="scheduleTableBody">
+            <!-- Table body will be populated dynamically -->
+          </tbody>
+    </table>
+
+    <script>
+        // Given data
+        var data1  = "<%= data %>" ;
+        var schedules = data1.split(',');
+      
+        // Function to create and append rows to the table body
+        function addRow(time, StartingStation, EndingStation, NoOfBus, day) {
+          var tbody = document.getElementById('scheduleTableBody');
+          var row = document.createElement('tr');
+          row.innerHTML = '<td>' + time + '</td>' +
+                          '<td>' + StartingStation + '</td>' +
+                          '<td>' + EndingStation + '</td>' +
+                          '<td>' + NoOfBus + '</td>' +
+                          '<td>' + day + '</td>';
+          tbody.appendChild(row);
+        }
+      
+        // Loop through the schedules and populate the table
+        for (var i = 0; i < schedules.length; i += 5) {
+          addRow(schedules[i], schedules[i+1], schedules[i+2], schedules[i+3], schedules[i+4]);
+        }
+      </script>
+</body>
+</html>
