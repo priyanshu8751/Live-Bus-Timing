@@ -1,0 +1,146 @@
+ *{
+    padding:0;
+    margin:0; 
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+    
+}
+
+body{
+    background: #f0f0f0; 
+    scroll-behavior: smooth;
+    font-family: Arial, sans-serif; 
+}
+
+.navBar{
+    display:flex;
+    align-items: center; 
+    justify-content: space-between;
+    padding: 10px 50px; 
+    background: #fff; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.logo{
+    margin-right: auto; 
+}
+
+.logo img{
+    height: 80px;
+    cursor: pointer; 
+}
+
+.navMenu{
+    margin-left: auto; 
+}
+
+.navMenu .scheduleBtn{
+    background: #f39c12; 
+    color:  rgb(36, 115, 206);
+    margin: 0 15px;
+    padding: 10px 15px;
+    border: none; 
+    border-radius: 58px; 
+    font-weight: bold;
+    transition: background 0.3s ease; 
+}
+  
+.navMenu .scheduleBtn:hover{
+    font-weight: bold;
+    color: white;
+    background-color: rgb(36, 115, 206); 
+    transition: background-color 0.3s ease; 
+    cursor: pointer;
+}
+
+.strip {
+background-color: rgb(36, 115, 206);
+ height: 50px;  
+ overflow: hidden;
+ position: relative;
+}
+
+.strip p {
+ color: white;
+ position: absolute;
+ width: 100%;
+ height: 100%;
+ margin: 0;
+ line-height: 50px;
+ text-align: center;
+ /* Starting position */
+ -moz-transform:translateX(50%);
+ -webkit-transform:translateX(50%);  
+ transform:translateX(50%);
+ /* Apply animation to this element */  
+ -moz-animation: strip 15s linear infinite;
+ -webkit-animation: strip 15s linear infinite;
+ animation: strip 15s linear infinite;
+}
+/* Move it (define the animation) */
+@-moz-keyframes strip {
+ 0%   { -moz-transform: translateX(50%); }
+ 100% { -moz-transform: translateX(-100%); }
+} 
+@-webkit-keyframes strip {
+ 0%   { -webkit-transform: translateX(50%); }
+ 100% { -webkit-transform: translateX(-100%); }
+} 
+/* Firefox bug fix */
+ @keyframes strip {
+ 0%   { 
+ -moz-transform: translateX(50%); 
+ -webkit-transform: translateX(50%); 
+ transform: translateX(50%);     
+ } 
+ 100% { 
+ -moz-transform: translateX(-100%); 
+ -webkit-transform: translateX(-100%); 
+ transform: translateX(-100%); 
+ } 
+} 
+
+table {
+    border-collapse: collapse;
+    width: 95%;
+    margin: 50px;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #f2f2f2;
+}
+
+/* Media queries for responsiveness */
+@media screen and (max-width: 768px) {
+    .navBar {
+        padding: 5px;
+    }
+    .navMenu .scheduleBtn {
+        margin: 0 5px;
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    .logo img {
+        height: 60px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .navBar {
+        padding: 5px;
+    }
+    .navMenu .scheduleBtn {
+        margin: 0 5px;
+        padding: 5px 8px;
+        font-size: 10px;
+    }
+    .logo img {
+        height: 50px;
+    }
+}
+ 
